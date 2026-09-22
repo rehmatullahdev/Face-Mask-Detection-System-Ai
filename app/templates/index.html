@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+<nav class="sticky-nav">
+    <div class="nav-left">
+        <span class="nav-logo">😷</span>
+        <span class="nav-title">Face Mask Detection</span>
+    </div>
+    <div class="nav-right">
+        <a href="{{ url_for('main.upload_page') }}" class="nav-btn btn-upload">⬆ Upload</a>
+        <a href="{{ url_for('admin.login') }}" class="nav-btn btn-admin">🔒 Admin Login</a>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+<div class="centered-container">
+    <h1 class="main-title">Live Detection</h1>
+
+    <div class="preview-card centered-card">
+        <div class="video-wrapper">
+            <img src="{{ url_for('main.video_feed') }}" id="displayImage" class="video-feed" alt="Live video feed">
+            <div class="processing-overlay" id="processingOverlay">
+                <div class="spinner"></div>
+                <span>Processing image…</span>
+            </div>
+        </div>
+
+        <div class="controls-row">
+            <button class="btn-cam btn-start" id="btnStart" onclick="startCamera()">▶ Start camera</button>
+            <button class="btn-cam btn-stop" id="btnStop" onclick="stopCamera()">⏹ Stop</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const displayImage = document.getElementById('displayImage');
+    const videoFeedUrl = "{{ url_for('main.video_feed') }}";
+
+    function startCamera() {
+        fetch('{{ url_for("main.start_feed") }}', { method: 'POST' })
+            .then(r => r.json())
+            .then(() => {
+                displayImage.src = videoFeedUrl + '?t=' + Date.now();
+            });
+    }
+
+    function stopCamera() {
+        fetch('{{ url_for("main.stop_feed") }}', { method: 'POST' })
+            .then(r => r.json())
+            .then(() => {
+
+            });
+    }
+</script>
+
+{% endblock %}

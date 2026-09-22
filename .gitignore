@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+env/
+venv/
+.venv/
+
+# Environment variables and local secrets
+.env
+.env.*
+!.env.example
+
+# Generated application files
+app/static/uploads/*
+!app/static/uploads/.gitkeep
+*.db
+*.sqlite
+*.sqlite3
+
+# Tooling and OS files
+.pytest_cache/
+.mypy_cache/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

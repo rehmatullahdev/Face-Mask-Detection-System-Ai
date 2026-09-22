@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Image - Face Mask Detection{% endblock %}
+
+{% block content %}
+
+<div class="centered-container">
+    <h1 class="main-title">Image Analysis</h1>
+
+    <div class="upload-layout">
+        <!-- Left Side: Image Preview -->
+        <div class="preview-card" style="flex: 1; max-width: 800px;">
+            <div class="video-wrapper upload-mode" id="dropZone">
+                <div class="upload-placeholder" id="placeholder">
+                    <div style="font-size: 3rem;">🖼️</div>
+                    <p>No image selected.<br>Click the button or drag and drop an image here.</p>
+                </div>
+                <img src="" id="displayImage" class="video-feed upload-mode" alt="Analysis result">
+
+                <div class="processing-overlay" id="processingOverlay">
+                    <div class="spinner"></div>
+                    <span>Processing image…</span>
+                </div>
+            </div>
+
+            <div class="controls-row">
+                <label class="btn btn-primary">
+                    <input type="file" id="imageUpload" accept="image/*" onchange="uploadImage(event)">
+                    ⬆ Upload Image
+                </label>
+                <a href="{{ url_for('main.index') }}" class="btn btn-outline">◀ Back to Live Feed</a>
+            </div>
+        </div>
+
+        <!-- Right Side: Results Panel -->
+        <div class="results-panel" id="resultsPanel">
+            <h3 style="margin: 0; font-weight: 800; font-size: 1.25rem;">Analysis Result</h3>
+
+            <div class="result-card">
+                <h4>Mask</h4>
+                <div class="count count-mask" id="countMask">0</div>
+            </div>
+
+            <div class="result-card">
+                <h4>No Mask</h4>
+                <div class="count count-unmask" id="countUnmask">0</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    const displayImage = document.getElementById('displayImage');
+    const placeholder = document.getElementById('placeholder');
+    const processingOverlay = document.getElementById('processingOverlay');
+    const resultsPanel = document.getElementById('resultsPanel');
+    const countMask = document.getElementById('countMask');
+    const countUnmask = document.getElementById('countUnmask');
+
+    function uploadImage(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        processingOverlay.classList.add('visible');
+
+        fetch('{{ url_for("main.upload_image") }}', { method: 'POST', body: formData })
+            .then(r => r.json())
+            .then(data => {
+                processingOverlay.classList.remove('visible');
+                if (data.status === 'success') {
+                    displayImage.src = 'data:image/jpeg;base64,' + data.image;
+                    displayImage.classList.add('visible');
+                    placeholder.style.display = 'none';
+
+                    // Update Results
+                    countMask.innerText = data.with_mask;
+                    countUnmask.innerText = data.without_mask;
+                    resultsPanel.classList.add('visible');
+                } else {
+                    alert('Error: ' + data.error);
+                    resetUI();
+                }
+            })
+            .catch(() => {
+                processingOverlay.classList.remove('visible');
+                resetUI();
+            });
+
+        event.target.value = '';
+    }
+
+    function resetUI() {
+        displayImage.src = '';
+        displayImage.classList.remove('visible');
+        placeholder.style.display = 'flex';
+        resultsPanel.classList.remove('visible');
+    }
+
+    // Drag and drop support
+    const dropZone = document.getElementById('dropZone');
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = 'var(--primary)';
+    });
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.style.borderColor = 'var(--border)';
+    });
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = 'var(--border)';
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+            const mockEvent = { target: { files: [file], value: '' } };
+            uploadImage(mockEvent);
+        }
+    });
+</script>
+
+{% endblock %}

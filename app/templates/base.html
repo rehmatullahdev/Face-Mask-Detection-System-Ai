@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Face Mask Detection{% endblock %}</title>
+    <meta name="description"
+        content="{% block description %}Real-time face mask detection powered by AI.{% endblock %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+
+    <div class="root">
+        {% block navbar %}{% endblock %}
+
+
+
+
+        {% block content %}{% endblock %}
+
+    </div><!-- /root -->
+
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

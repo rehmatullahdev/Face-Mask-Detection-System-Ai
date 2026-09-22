@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login{% endblock %}
+
+{% block nav_actions %}{% endblock %}
+
+{% block content %}
+<div style="flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0;">
+  <div class="login-card">
+    <div class="logo-box">🛡️</div>
+    <h2>Admin Portal</h2>
+    <p class="subtitle">Enter your credentials to continue</p>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('admin.login') }}">
+      <div class="input-group">
+        <label>Username</label>
+        <input type="text" name="username" required placeholder="admin">
+      </div>
+
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" name="password" required placeholder="••••••••">
+      </div>
+
+      <button class="btn btn-primary" style="width: 100%; border-radius: 0.75rem; padding: 0.9rem;" type="submit">Sign
+        In</button>
+    </form>
+
+    <a href="{{ url_for('main.index') }}" class="btn btn-outline"
+      style="margin-top: 1.5rem; width: 100%; border-radius: 0.75rem;">← Back to Home</a>
+  </div>
+</div>
+{% endblock %}

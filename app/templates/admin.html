@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block navbar %}
+<nav class="sticky-nav">
+    <div class="nav-left">
+        <span class="nav-logo">📊</span>
+        <span class="nav-title">Admin Dashboard</span>
+    </div>
+    <div class="nav-right">
+        <a href="{{ url_for('admin.logout') }}" class="nav-btn btn-admin">🚪 Logout</a>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <div class="dashboard-header">
+        <div>
+            <h1 style="margin: 0; font-size: 1.75rem; font-weight: 800;">Overview</h1>
+            <p style="margin: 0.25rem 0 0 0; color: var(--text-muted); font-size: 0.9rem;">Real-time statistics and
+                recent detections</p>
+        </div>
+        <button onclick="location.reload()" class="btn btn-outline" style="border-radius: 0.75rem;">🔄 Refresh</button>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="card">
+            <h2>Overall Statistics</h2>
+            <div class="stat-box">
+                <div class="stat" style="border-top: 4px solid var(--success);">
+                    <h3>{{ with_mask }}</h3>
+                    <p>Mask</p>
+                </div>
+                <div class="stat" style="border-top: 4px solid var(--danger);">
+                    <h3>{{ without_mask }}</h3>
+                    <p>No Mask</p>
+                </div>
+                <div class="stat" style="border-top: 4px solid var(--primary); grid-column: span 2;">
+                    <h3>{{ total_images }}</h3>
+                    <p>Total Images</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Compliance Overview</h2>
+            <div
+                style="height: 220px; display: flex; justify-content: center; align-items: center; position: relative;">
+                {% if total_images > 0 %}
+                <canvas id="maskChart"></canvas>
+                {% else %}
+                <div style="text-align: center; color: var(--text-muted);">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">📈</div>
+                    <p style="font-weight: 600; margin: 0;">No data available yet</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Recent Detections (Last 50)</h2>
+        {% if recent_logs %}
+        <div class="gallery">
+            {% for log in recent_logs %}
+            <div class="log-item"
+                onclick="viewImage('{{ url_for('static', filename='uploads/' + log.image_filename) }}')">
+                <img src="{{ url_for('static', filename='uploads/' + log.image_filename) }}" alt="Capture"
+                    style="cursor: pointer;">
+                <p>
+                    <span class="log-badge bg-green">M: {{ log.with_mask }}</span>
+                    <span class="log-badge bg-red">NM: {{ log.without_mask }}</span>
+                </p>
+                <p style="font-size: 0.7rem; color: #94a3b8; margin-top: 0;">{{ log.timestamp.strftime('%m/%d %H:%M') }}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p style="color: var(--text-muted); font-weight: 500;">No images logged yet. Start the camera or upload an
+            image.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Image Viewer Modal -->
+<div id="imageModal" class="image-modal" onclick="closeModal()">
+    <span class="close-modal">&times;</span>
+    <img class="modal-content" id="modalImg">
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const total = {{ total_images }};
+
+    if (total > 0) {
+        const ctx = document.getElementById('maskChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Mask', 'No Mask'],
+                datasets: [{
+                    data: [{{ with_mask }}, {{ without_mask }}],
+            backgroundColor: ['#10b981', '#ef4444'],
+            borderWidth: 0,
+            hoverOffset: 10
+        }]
+            },
+    options: {
+        responsive: true,
+            maintainAspectRatio: false,
+                cutout: '75%',
+                    plugins: {
+            legend: {
+                position: 'bottom',
+                    labels: {
+                    color: '#475569',
+                        padding: 20,
+                            font: { family: 'Inter', weight: 600, size: 12 }
+                }
+            },
+            tooltip: {
+                backgroundColor: '#1e293b',
+                    padding: 12,
+                        titleFont: { family: 'Inter', size: 14, weight: 700 },
+                bodyFont: { family: 'Inter', size: 13 },
+                cornerRadius: 8,
+                    displayColors: false
+            }
+        }
+    }
+        });
+    }
+
+    function viewImage(src) {
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImg');
+        modal.style.display = "flex";
+        modalImg.src = src;
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+    }
+
+    function closeModal() {
+        document.getElementById('imageModal').style.display = "none";
+        document.body.style.overflow = 'auto'; // Restore scrolling
+    }
+
+    // Close modal on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+    });
+</script>
+{% endblock %}
