@@ -95,9 +95,4 @@ Detection and Flask settings are defined in `app/config.py`, including:
 - SQLite database location
 - Upload directory
 
-Set `SECRET_KEY` as an environment variable when running outside local development:
 
-```powershell
-$env:SECRET_KEY = "replace-with-a-long-random-value"
-python run.py
-```
