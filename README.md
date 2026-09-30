@@ -1,98 +1,126 @@
-# Face Mask Detection
+# 😷 Face Mask Detection System
 
-A Python application that detects whether faces are wearing masks. It provides a Flask web interface and a Tkinter desktop interface, using bundled MediaPipe and Keras models.
+A **Deep Learning-based Face Mask Detection System** developed as my Final Year Project (FYP). The application detects faces and classifies them as **With Mask** or **Without Mask** using a trained deep learning model.
 
-## Features
+The system provides a Flask-based web interface for **real-time webcam detection** and **image-based mask detection**, along with detection logging and statistics.
 
-- Real-time webcam mask detection in the web app
-- Image upload and analysis
-- Desktop image analysis interface
-- Detection statistics and saved snapshots
-- SQLite logging for detection results
-- Admin dashboard for recent detection logs
+## ✨ Features
 
-## Requirements
+- 🎥 Real-time face mask detection using webcam
+- 🖼️ Upload images for mask detection
+- 👥 Supports detection of multiple faces
+- 😷 Classifies faces as **With Mask** or **Without Mask**
+- 📊 Detection statistics and results
+- 📸 Saves detection snapshots
+- 🗃️ SQLite database for detection logs
+- 🛡️ Admin dashboard for viewing recent detection records
+- 🌐 Flask-based responsive web interface
 
+## 🛠️ Technologies Used
+
+- **Python**
+- **Flask**
+- **TensorFlow / Keras**
+- **MobileNetV3**
+- **MediaPipe**
+- **OpenCV**
+- **SQLite**
+- **SQLAlchemy**
+- **HTML / CSS / JavaScript**
+
+## 📋 Requirements
+
+- Python 3.10+
+- Webcam for real-time detection
 - Windows, macOS, or Linux
-- Python 3.12 recommended
-- A working webcam for live detection
 
-The repository includes a local virtual environment in `env/`. For a fresh environment, install the required packages used by the project:
+Install the required dependencies:
 
 ```bash
 pip install flask flask-sqlalchemy opencv-python numpy pillow tensorflow mediapipe
 ```
 
-## Running the Web App
+## 🚀 Running the Project
 
-Activate the virtual environment on Windows PowerShell:
+Clone the repository and navigate to the project directory.
+
+Create a virtual environment:
+
+```bash
+python -m venv env
+```
+
+Activate it on Windows:
 
 ```powershell
 .\env\Scripts\Activate.ps1
 ```
 
-Start the Flask server:
+Install the required packages:
+
+```bash
+pip install flask flask-sqlalchemy opencv-python numpy pillow tensorflow mediapipe
+```
+
+Start the Flask application:
 
 ```bash
 python run.py
 ```
 
-Open [http://localhost:5000](http://localhost:5000) in a browser.
-
-The server runs in debug mode and listens on port `5000` by default.
-
-## Running the Desktop App
-
-With the virtual environment activated, run:
-
-```bash
-python desktop_app.py
-```
-
-The desktop interface supports selecting an image, running detection, and viewing the results.
-
-## Admin Dashboard
-
-Open [http://localhost:5000/admin/login](http://localhost:5000/admin/login) and sign in with the credentials currently defined by the application:
-
-- Username: `admin`
-- Password: `admin`
-
-Change this authentication implementation before deploying the application outside a local development environment.
-
-## Project Structure
+Then open:
 
 ```text
-run.py                         Flask entry point
-desktop_app.py                 Tkinter desktop entry point
-app/
-  blueprints/                  Web and admin routes
-  detectors/                   Face and mask detection components
-  resources/models/            Bundled detection models
-  services/                    Camera, upload, logging, and pipeline services
-  static/uploads/              Generated upload and webcam images
-  templates/                   Flask HTML templates
-  config.py                    Application configuration
-  models.py                    SQLAlchemy models
+http://localhost:5000
 ```
 
-## Generated Files
+in your web browser.
 
-The application creates these local files and directories at runtime:
+## 📁 Project Structure
 
-- `app/detections.db`: SQLite database
-- `app/static/uploads/`: uploaded images and webcam snapshots
+```text
+Face-Mask-Detection/
+│
+├── run.py                      # Flask application entry point
+│
+├── app/
+│   ├── blueprints/             # Application routes
+│   ├── detectors/              # Face and mask detection logic
+│   ├── resources/
+│   │   └── models/             # Trained AI models
+│   ├── services/               # Detection and camera services
+│   ├── static/                 # CSS, JavaScript and generated images
+│   ├── templates/              # HTML templates
+│   ├── config.py               # Application configuration
+│   └── models.py               # Database models
+│
+└── README.md
+```
 
-They are excluded from Git by `.gitignore`.
+## 🧠 How It Works
 
-## Configuration
+1. **MediaPipe** detects faces from webcam frames or uploaded images.
+2. The detected face is extracted and preprocessed.
+3. The trained **MobileNetV3** model analyzes the face.
+4. The system classifies it as:
+   - 😷 **With Mask**
+   - ❌ **Without Mask**
+5. Detection results are displayed through the Flask web interface.
+6. Detection information can be stored in the SQLite database for logging and statistics.
 
-Detection and Flask settings are defined in `app/config.py`, including:
+## 🎯 Project Purpose
 
-- Face confidence threshold: `0.5`
-- Mask classification threshold: `0.6`
-- Allowed upload extensions
-- SQLite database location
-- Upload directory
+The purpose of this project is to demonstrate the practical application of **Computer Vision, Deep Learning, and Web Development** by integrating a trained face mask classification model into a usable web-based detection system.
 
+## 👨‍💻 Project & Developer
 
+- **Project:** Face Mask Detection System
+- **Type:** Final Year Project (FYP)
+- **Program:** BS Computer Science
+- **University:** Virtual University of Pakistan
+- **Developer:** Rehmat Ullah
+- **GitHub:** [@rehmatullahdev](https://github.com/rehmatullahdev)
+
+---
+
+⭐ If you find this project useful, consider giving the repository a **star**.
