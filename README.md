@@ -81,20 +81,31 @@ in your web browser.
 ```text
 Face-Mask-Detection/
 │
-├── run.py                      # Flask application entry point
+├── run.py                      # Flask web application entry point
+├── desktop_app.py              # Desktop application entry point
+├── requirements.txt            # Python dependencies
 │
 ├── app/
-│   ├── blueprints/             # Application routes
+│   ├── __init__.py             # Flask application factory
+│   ├── blueprints/             # Web application routes
 │   ├── detectors/              # Face and mask detection logic
 │   ├── resources/
 │   │   └── models/             # Trained AI models
-│   ├── services/               # Detection and camera services
-│   ├── static/                 # CSS, JavaScript and generated images
+│   ├── services/               # Camera, upload and detection services
+│   ├── static/
+│   │   ├── css/                # Application stylesheets
+│   │   └── uploads/             # Generated detection snapshots
 │   ├── templates/              # HTML templates
+│   ├── utils/                  # Image and drawing utilities
 │   ├── config.py               # Application configuration
-│   └── models.py               # Database models
+│   ├── models.py               # Database models
+│   └── detections.db           # SQLite detection log database
 │
-└── README.md
+├── Documentation/              # Project reports and presentation
+├── Prediction Samples/         # Example webcam prediction images
+├── Training_and_Testing_samples/ # Training and testing images
+├── .gitignore                  # Git ignore rules
+└── README.md                   # Project documentation
 ```
 
 ## 🧠 How It Works
